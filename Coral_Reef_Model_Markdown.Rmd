@@ -1,0 +1,10 @@
+---
+title: "BIOL 381_ Coral Reef Model"
+author: "Gavin Briske, Matt Futia, Liza Morse"
+date: "10/14/2020"
+output: pdf_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
