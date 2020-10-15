@@ -5,6 +5,7 @@ date: "10/14/2020"
 output: pdf_document
 ---
 
+<<<<<<< HEAD
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
@@ -72,3 +73,54 @@ for (i in 1:10) {
 }
 output4$x = output4$x/10
 ```
+
+
+=======
+dx/dt = Kx(1−x)(−1 +j(1−C) − σP(1−x) +φ(2x−1))
+
+*Defined Variables (description in table)*
+
+x = fraction of individuals (humans) in the population willing to participate in coral conservation
+C = live coral cover 
+P = Parrotfish abundance (try different values)
+
+*Undefined Variables (description not in table)*
+
+K = human growth rate per year
+j = coral growth rate per year
+σ = Parrotfish growth rate per year
+φ = unknown interaction term
+
+```{r}
+#parameters
+K = 1.014
+j = 1.68
+σ = 0.5
+φ = 0.2
+
+#equation - change in willingness to participate in coral conservaiton
+change_wtp <- Kx(1−x)(−1 +j(1−C) − σP(1−x) +φ(2x−1))
+
+
+```
+
+Equilibrium points occur when dx/dt = 0. 
+
+dx/dt = 0 at 3 points:
+
+1) when x = 0
+
+In this case, none of population supports coral reef conservation.
+
+2) when (1-x) = 0 aka x = 1
+
+In this case, all of population supports coral reef conservation.
+
+3) When (−1 +j(1−C) − σP(1−x) +φ(2x−1)) = 0
+
+-1 + j - jC - σP + σPx + 2φx - φ = 0
+
+j - jC - σP + σPx + 2φx = 1
+
+Not sure what this means...
+
