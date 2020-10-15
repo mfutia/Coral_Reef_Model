@@ -8,3 +8,67 @@ output: pdf_document
 ```{r setup, include=FALSE}
 knitr::opts_chunk$set(echo = TRUE)
 ```
+
+```{r}
+Table1 = data.frame(matrix(nrow = 6, ncol = 3))
+colnames(Table1) = c("Parameter", "Description", "Value")
+Table1$Parameter = c('\u03BA', 'j', 'C', 'P', '\u03c3', '\u03A6')
+Table1$Description = c("Human population growth rate", "Coral rate of change", "Live coral cover", "Parrotfish abundance", "Parrotfish rate of change", "Fishing pressure")
+Table1$Value = c("1.014/y", "1.68", "a", "b", "0.5", "0.2")
+```
+
+```{r comment = '', echo = F, results = 'asis'}
+knitr::kable(Table1, caption = "Model parameter symbols, description, and estimated parameter values.")
+``` 
+
+```{r}
+### Create function to calculate dx/dt
+opinion = function(y, x, C, P){
+  change = 1.014/y*x*(1-x)*(-1+(1.68*(1-C))-(0.5*P*(1-x))+(0.2*(2*x-1)))
+  return(change)
+}
+
+### Create a dataframe with 10 values for x (0.1:1.0), y two through five, live coral = 5 and parrotfish = 10
+output1 = data.frame(matrix(data = c(1:10), nrow = 10, ncol = 5))
+colnames(output1) = (c("x", "y1", "y2", "y3", "y4"))
+
+for (i in 1:10) {
+  for (y in 2:5){
+    output1[i, y] = opinion(y, i/10, 5, 10)
+  }
+}
+output1$x = output1$x/10
+
+### Create a dataframe with 10 values for x, y two through five, live coral = 10 and parrotfish = 5
+output2 = data.frame(matrix(data = c(1:10), nrow = 10, ncol = 5))   
+colnames(output2) = (c("x", "y1", "y2", "y3", "y4"))
+
+for (i in 1:10) {
+  for (y in 2:5){
+    output2[i, y] = opinion(y, i/10, 10, 5)
+  }
+}
+output2$x = output2$x/10
+
+### Create a dataframe with 10 values for x, y two through five, live coral = 100 and parrotfish = 10
+output3 = data.frame(matrix(data = c(1:10), nrow = 10, ncol = 5))
+colnames(output3) = (c("x", "y1", "y2", "y3", "y4"))
+
+for (i in 1:10) {
+  for (y in 2:5){
+    output3[i, y] = opinion(y, i/10, 100, 10)
+  }
+}
+output3$x = output3$x/10
+
+### Create a dataframe with 10 values for x, y two through five, live coral = 0.1 and parrotfish = 1
+output4 = data.frame(matrix(data = c(1:10), nrow = 10, ncol = 5))   
+colnames(output4) = (c("x", "y1", "y2", "y3", "y4"))
+
+for (i in 1:10) {
+  for (y in 2:5){
+    output4[i, y] = opinion(y, i/10, .1, 1)
+  }
+}
+output4$x = output4$x/10
+```
