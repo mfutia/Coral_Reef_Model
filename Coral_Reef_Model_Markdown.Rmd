@@ -10,11 +10,134 @@ output: pdf_document
 knitr::opts_chunk$set(echo = TRUE)
 ```
 
+*Part A*
+
+![Individual flow diagram representing societal factors that influence the willingness of the public to participate in coral reef conservation.](C:/Users/mttft/Desktop/UVM/UVM Courses/Quant Reasoning/Coral_Reef_Model/SimpleModel_Futia.png)
+
+
+![Team flow diagram representing societal factors that influence the willingness of the public to participate in coral reef conservation.](C:/Users/mttft/Desktop/UVM/UVM Courses/Quant Reasoning/Coral_Reef_Model/Case Study Flow Chart.png)
+
+
+
+```{r}
+require(deSolve)
+Time = seq(0,50,0.1)
+# Scenario 1: C = 0.8, P = 0.5
+Pars = c(kappa = 1.014, j = 1.68, sigma = 0.5, phi = 0.2, C = 0.8, P = 0.5)
+
+social_model <- function(Time, State, Pars) {
+  with(as.list(c(State, Pars)), {
+    dX <- kappa*X*(1 - X)*(-1 + j*(1 - C) - sigma*P*(1 - X) + phi*(2*X - 1))
+    list(c(dX))
+  })
+}
+
+State = c(X = 0.2)
+out.2 = data.frame(ode(y = State, times = Time, func = social_model, parms = Pars))
+out.2$Initial = 0.2
+
+State = c(X = 0.5)
+out.5 = data.frame(ode(y = State, times = Time, func = social_model, parms = Pars))
+out.5$Initial = 0.5
+
+
+State = c(X = 0.8)
+out.8 = data.frame(ode(y = State, times = Time, func = social_model, parms = Pars))
+out.8$Initial = 0.8
+
+
+out = rbind(out.2, out.5, out.8)
+
+# Scenario 2: C = 0.8, P = 0.2
+Pars2 = c(kappa = 1.014, j = 1.68, sigma = 0.5, phi = 0.2, C = 0.8, P = 0.2)
+
+social_model2 <- function(Time, State, Pars2) {
+  with(as.list(c(State, Pars2)), {
+    dX <- kappa*X*(1 - X)*(-1 + j*(1 - C) - sigma*P*(1 - X) + phi*(2*X - 1))
+    list(c(dX))
+  })
+}
+
+State = c(X = 0.2)
+out.2 = data.frame(ode(y = State, times = Time, func = social_model2, parms = Pars2))
+out.2$Initial = 0.2
+
+State = c(X = 0.5)
+out.5 = data.frame(ode(y = State, times = Time, func = social_model2, parms = Pars2))
+out.5$Initial = 0.5
+
+
+State = c(X = 0.8)
+out.8 = data.frame(ode(y = State, times = Time, func = social_model2, parms = Pars2))
+out.8$Initial = 0.8
+
+
+out2 = rbind(out.2, out.5, out.8)
+
+# Scenario 3: C = 0.8, P = 0.5
+Pars3 = c(kappa = 1.014, j = 1.68, sigma = 0.5, phi = 0.2, C = 0.4, P = 0.5)
+
+social_model3 <- function(Time, State, Pars3) {
+  with(as.list(c(State, Pars3)), {
+    dX <- kappa*X*(1 - X)*(-1 + j*(1 - C) - sigma*P*(1 - X) + phi*(2*X - 1))
+    list(c(dX))
+  })
+}
+
+State = c(X = 0.2)
+out.2 = data.frame(ode(y = State, times = Time, func = social_model3, parms = Pars3))
+out.2$Initial = 0.2
+
+State = c(X = 0.5)
+out.5 = data.frame(ode(y = State, times = Time, func = social_model3, parms = Pars3))
+out.5$Initial = 0.5
+
+
+State = c(X = 0.8)
+out.8 = data.frame(ode(y = State, times = Time, func = social_model3, parms = Pars3))
+out.8$Initial = 0.8
+
+out3 = rbind(out.2, out.5, out.8)
+
+p1 = ggplot(out, aes(x = time, y = X)) +
+  geom_line(out, mapping = aes(time, X, color = as.character(Initial)), size = 1.5) +
+  labs(x = 'Time', y = "", color = "Initial proportion") +
+  theme_classic() +
+  theme(legend.position = c(.8, .8)) +
+  scale_x_continuous(expand = c(0,0)) +
+  annotate("text", x = 4, y=.9, label = "Scenario 1")
+
+p2 = ggplot(out2, aes(x = time, y = X)) +
+  geom_line(out2, mapping = aes(time, X, color = as.character(Initial)), size = 1.5) +
+  labs(x = 'Time', y = "Proportion of population willing to participate in conservation", color = "Initial proportion") +
+  theme_classic() +
+  theme(legend.position = c(.8, .8)) +
+  scale_x_continuous(expand = c(0,0)) +
+  annotate("text", x = 4, y=.9, label = "Scenario 2")
+
+p3 = ggplot(out3, aes(x = time, y = X)) +
+  geom_line(out3, mapping = aes(time, X, color = as.character(Initial)), size = 1.5) +
+  labs(x = 'Time', y = "", color = "Initial proportion") +
+  theme_classic() +
+  theme(legend.position = c(.8, .8)) +
+  scale_x_continuous(expand = c(0,0)) +
+  annotate("text", x = 4, y=.9, label = "Scenario 3")
+```
+
+
+```{r, figures-side, fig.show = "hold", out.width = "75%", fig.cap = "Proportion of poeple willing to participate in coral reef conservation over time with three different initial starting proportions (0.2, 0.5, and 0.8) across three scenarios. Scenarios differ based on live coral cover (Scenario 1: 0.8, Scenario 2: 0.8, Scenario 3: 0.4) and parrotfish abundance (Scenario 1: 0.5, Scenario 2: 0.2, Scenario 3: 0.5).", fig.align = "center"}
+par(mfcol = c(3,1))
+p1
+p2
+p3
+```
+
+
 ```{r}
 Table1 = data.frame(matrix(nrow = 6, ncol = 3))
 colnames(Table1) = c("Parameter", "Description", "Value")
 Table1$Parameter = c('\u03BA', 'j', 'C', 'P', '\u03c3', '\u03A6')
-Table1$Description = c("Human population growth rate", "Coral rate of change", "Live coral cover", "Parrotfish abundance", "Parrotfish rate of change", "Fishing pressure")
+Table1$Description = c("Interactions with others", "Sensitivity to dead coral", "Live coral cover", "Parrotfish abundance", "Fishing pressue", "Public pressure")
 Table1$Value = c("1.014/y", "1.68", "a", "b", "0.5", "0.2")
 ```
 
@@ -22,58 +145,56 @@ Table1$Value = c("1.014/y", "1.68", "a", "b", "0.5", "0.2")
 knitr::kable(Table1, caption = "Model parameter symbols, description, and estimated parameter values.")
 ``` 
 
+Based on the three scenarios, long-term results from this model result in either complete or absent willingness to participate in coral reef conservation. The ultimate outcome of the model appears to be dependent on amount of live coral and the initial proportion of individuals willing to participate; high initial support for conservation and low abundance of live coral results in increased support for conservation.
+
+*Part B*
+
+![Team flow diagram representing ecological and societal factors that influence coral reef conservation.](C:/Users/mttft/Desktop/UVM/UVM Courses/Quant Reasoning/Coral_Reef_Model/Eco_SocioFlowChart.png)
+
+By including both the ecological and social components in our model, we predict the model will be ________ We anticipate that live coral will be the most important parameter in determining the overall system dynamics because it seems to be the only term that all variables are directly dependent on.
+
 ```{r}
-### Create function to calculate dx/dt
-opinion = function(y, x, C, P){
-  change = 1.014/y*x*(1-x)*(-1+(1.68*(1-C))-(0.5*P*(1-x))+(0.2*(2*x-1)))
-  return(change)
+coupled_model = function(Time, State, Pars) {
+  with(as.list(c(State, Pars)), {
+    dM =  a*M*C - (P*M)/(M+T) + gamma*M*T
+    dC =  r*T*C - d*C - a*M*C
+    dT = (P*M)/(M+T) - gamma*M*T - r*T*C + d*C
+    dP = s*P*(1 - P/C) - sigma*P*(1 - X)
+    dX = kappa*X*(1 - X)*(-1 + j*(1 - C) - sigma*P*(1 - X) + phi*(2*X - 1))
+    return(list(c(dM,dC,dT,dP,dX)))  
+  })
 }
 
-### Create a dataframe with 10 values for x (0.1:1.0), y two through five, live coral = 5 and parrotfish = 10
-output1 = data.frame(matrix(data = c(1:10), nrow = 10, ncol = 5))
-colnames(output1) = (c("x", "y1", "y2", "y3", "y4"))
+pars = c(a = 0.1, gamma = 0.8, r = 1.0, d = 0.44, s = 0.49, sigma = 0.5, kappa= 1.014, j=1.68, sigma = 0.5, phi = 0.2)
 
-for (i in 1:10) {
-  for (y in 2:5){
-    output1[i, y] = opinion(y, i/10, 5, 10)
-  }
-}
-output1$x = output1$x/10
 
-### Create a dataframe with 10 values for x, y two through five, live coral = 10 and parrotfish = 5
-output2 = data.frame(matrix(data = c(1:10), nrow = 10, ncol = 5))   
-colnames(output2) = (c("x", "y1", "y2", "y3", "y4"))
+yini = c(M = 0.05, C = 0.9, T = 0.05, P = 0.4, X = 0.5)
+times = seq(0, 100, by = 0.1)
+out_total = data.frame(ode(yini, times, coupled_model, pars))
 
-for (i in 1:10) {
-  for (y in 2:5){
-    output2[i, y] = opinion(y, i/10, 10, 5)
-  }
-}
-output2$x = output2$x/10
 
-### Create a dataframe with 10 values for x, y two through five, live coral = 100 and parrotfish = 10
-output3 = data.frame(matrix(data = c(1:10), nrow = 10, ncol = 5))
-colnames(output3) = (c("x", "y1", "y2", "y3", "y4"))
+final = melt(out_total, id.vars = "time")
 
-for (i in 1:10) {
-  for (y in 2:5){
-    output3[i, y] = opinion(y, i/10, 100, 10)
-  }
-}
-output3$x = output3$x/10
 
-### Create a dataframe with 10 values for x, y two through five, live coral = 0.1 and parrotfish = 1
-output4 = data.frame(matrix(data = c(1:10), nrow = 10, ncol = 5))   
-colnames(output4) = (c("x", "y1", "y2", "y3", "y4"))
+final1 = filter(final, variable != "X")
+final2 = filter(final, variable == "X")
 
-for (i in 1:10) {
-  for (y in 2:5){
-    output4[i, y] = opinion(y, i/10, .1, 1)
-  }
-}
-output4$x = output4$x/10
+par(mfrow=c(1,2))
+
+f1 = ggplot(final1, aes(x = time, y = value)) +
+  geom_line(final1, mapping = aes(time, value, color = variable)) +
+  theme_classic() +
+  theme(legend.position = c(.8, .75)) +
+  ylab("Proportional Cover") +
+  scale_x_continuous(expand = c(0,0))
+
+f2 = ggplot(final2, aes(x = time, y = value)) +
+  geom_line(final2, mapping = aes(time, value, color = variable)) +
+  theme_classic() +
+  ylab("Fraction that are conservationists") +
+  theme(legend.position = "none") +
+  scale_x_continuous(expand = c(0,0))
 ```
-
 
 =======
 dx/dt = Kx(1−x)(−1 +j(1−C) − σP(1−x) +φ(2x−1))
