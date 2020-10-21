@@ -2,7 +2,9 @@
 title: "Coral Reef Model"
 author: "Matt Futia"
 date: "10/16/2020"
-output: pdf_document
+output:
+  html_document:
+    df_print: paged
 ---
 
 ```{r setup, include=FALSE}
@@ -14,10 +16,10 @@ library(dplyr)
 
 **Part A**
 
-![Individual flow diagram representing societal factors that influence the willingness of the public to participate in coral reef conservation.](https://raw.githubusercontent.com/mfutia/Coral_Reef_Model/master/SimpleModel_Futia.png)
+![Individual flow diagram representing societal factors that influence the willingness of the public to participate in coral reef conservation.](SimpleModel_Futia.png)
 
 
-![Team flow diagram representing societal factors that influence the willingness of the public to participate in coral reef conservation.](https://raw.githubusercontent.com/mfutia/Coral_Reef_Model/master/Case%20Study%20Flow%20Chart.png)
+![Team flow diagram representing societal factors that influence the willingness of the public to participate in coral reef conservation.](Case Study Flow Chart.png)
 
 ```{r}
 require(deSolve)
@@ -196,7 +198,7 @@ Based on the four scenarios, long-term results from this model result in either 
 
 **Part B**
 
-![Team flow diagram representing ecological and societal factors that influence coral reef conservation.](https://raw.githubusercontent.com/mfutia/Coral_Reef_Model/master/Eco_SocioFlowChart.png)
+![Team flow diagram representing ecological and societal factors that influence coral reef conservation.](Eco_SocioFlowChart.png)
 *As a group, what do you predict will happen to the long-term dynamics when you couple the social and ecological systems together? Which parameters do you anticipate will be the most important for determining overall system dynamics?*
 
 By including both the ecological and social components in our model, we predict the model will be more complex with the direction of the curve (i.e., positive or negative) changing more frequently. In addition, we predict coral, willingness to participate, and macroalgae are likely the most important paramaters for determining overall system dynamics since those are the three things tied together with just one interaction arrow. With the other parameters, the interactions between them can be positive or negative or they have a complicated feedback loop with unknown causes.
