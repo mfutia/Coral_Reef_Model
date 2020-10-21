@@ -1,7 +1,7 @@
 ---
-title: "BIOL 381_ Coral Reef Model"
-author: "Gavin Briske, Matt Futia, Liza Morse"
-date: "10/14/2020"
+title: "Coral Reef Model"
+author: "Matt Futia"
+date: "10/16/2020"
 output: pdf_document
 ---
 
@@ -14,10 +14,10 @@ library(dplyr)
 
 **Part A**
 
-![Individual flow diagram representing societal factors that influence the willingness of the public to participate in coral reef conservation.](C:/Users/mttft/Desktop/UVM/UVM Courses/Quant Reasoning/Coral_Reef_Model/SimpleModel_Futia.png)
+![Individual flow diagram representing societal factors that influence the willingness of the public to participate in coral reef conservation.](https://github.com/mfutia/Coral_Reef_Model/blob/master/SimpleModel_Futia.png)
 
 
-![Team flow diagram representing societal factors that influence the willingness of the public to participate in coral reef conservation.](C:/Users/mttft/Desktop/UVM/UVM Courses/Quant Reasoning/Coral_Reef_Model/Case Study Flow Chart.png)
+![Team flow diagram representing societal factors that influence the willingness of the public to participate in coral reef conservation.](https://github.com/mfutia/Coral_Reef_Model/blob/master/Case Study Flow Chart.png)
 
 ```{r}
 require(deSolve)
@@ -182,19 +182,22 @@ p4
 Table1 = data.frame(matrix(nrow = 6, ncol = 3))
 colnames(Table1) = c("Parameter", "Description", "Value")
 Table1$Parameter = c("$\\kappa$", 'j', 'C', 'P', "$\\sigma$", "$\\phi$")
-Table1$Description = c("Interactions with others", "Sensitivity to dead coral", "Live coral cover", "Parrotfish abundance", "Fishing pressue", "Public pressure")
+Table1$Description = c("Interactions with others", "Sensitivity to dead coral",
+                       "Live coral cover", "Parrotfish abundance", "Fishing pressue", "Public pressure")
 Table1$Value = c("1.014/y", "1.68", "a", "b", "0.5", "0.2")
 ```
 
 ```{r comment = '', echo = F, results = 'asis'}
 knitr::kable(Table1, caption = "Model parameter symbols, description, and estimated parameter values.")
 ``` 
+*Answer the following questions: (a) What are the long-term dynamics of the system with the default parameters given below? (b) What are the most important parameters in determining the long-term dynamics?*
 
 Based on the four scenarios, long-term results from this model result in either complete or absent willingness to participate in coral reef conservation. The ultimate outcome of the model depends on amount of live coral, parrotfish abundance, and the initial proportion of individuals willing to participate; high initial support for conservation with low abundance of live coral and low parrotfish abundance results in increased support for conservation. If any of these conditions are not met, the outcome will always result in no support for conservation.
 
 **Part B**
 
-![Team flow diagram representing ecological and societal factors that influence coral reef conservation.](C:/Users/mttft/Desktop/UVM/UVM Courses/Quant Reasoning/Coral_Reef_Model/Eco_SocioFlowChart.png)
+![Team flow diagram representing ecological and societal factors that influence coral reef conservation.](https://github.com/mfutia/Coral_Reef_Model/blob/master/Eco_SocioFlowChart.png)
+*As a group, what do you predict will happen to the long-term dynamics when you couple the social and ecological systems together? Which parameters do you anticipate will be the most important for determining overall system dynamics?*
 
 By including both the ecological and social components in our model, we predict the model will be more complex with the direction of the curve (i.e., positive or negative) changing more frequently. In addition, we predict coral, willingness to participate, and macroalgae are likely the most important paramaters for determining overall system dynamics since those are the three things tied together with just one interaction arrow. With the other parameters, the interactions between them can be positive or negative or they have a complicated feedback loop with unknown causes.
 
@@ -210,7 +213,8 @@ coupled_model = function(Time, State, Pars) {
   })
 }
 
-pars = c(a = 0.1, gamma = 0.8, r = 1.0, d = 0.44, s = 0.49, sigma = 0.5, kappa= 1.014, j=1.68, sigma = 0.5, phi = 0.2)
+pars = c(a = 0.1, gamma = 0.8, r = 1.0, d = 0.44, s = 0.49, sigma = 0.5,
+         kappa= 1.014, j=1.68, sigma = 0.5, phi = 0.2)
 times = seq(0, 100, by = 0.1)
 
 # Scenario 1: M = 0.05, C = 0.9, T = 0.05, P = 0.4, X = 0.5
@@ -262,7 +266,7 @@ eco_graph = function(data,i){
   ggplot(data, aes(x = time, y = value)) +
   geom_line(data, mapping = aes(time, value, color = variable)) +
   theme_classic() +
-  theme(legend.position = c(0.8, 0.75)) +
+  theme(legend.position = c(0.8, 0.6)) +
   ylab("Relative Cover") +
   scale_x_continuous(expand = c(0,0)) +
   annotate("text", x = 4, y = max(data$value), label = i, size = 6) +
@@ -315,55 +319,29 @@ c4
 c5
 c6
 ```
+*Address the following questions: (a) What are the long-term dynamics of the system with the default parameters given below? (b) What are the most important parameters in determining the long-term dynamics?*
 
 Under most scenarios, the proportion of the population willing to participate in conservation ultimately became 1.0 (i.e., 100% of the population) while the macro algae cover increased and the cover of all other parameters approach 0 (i.e., locally extinct). Under the scenario when parrotfish density was increased, the ecological parameters had the same outcome (increased macro algae while all others decline); however, the proportion of the population willing to participate in conservation became absent (Figure 6D). Based on this information, the parrotfish density appears to have the greatest impact on coral reef conservation when taking into account the social and ecological components.
 
-=======
-dx/dt = Kx(1−x)(−1 +j(1−C) − σP(1−x) +φ(2x−1))
+**Part C**
 
-*Defined Variables (description in table)*
+*How did your predictions about the coupled socio-ecological systems line up with the results from the model? How did your results line up with the original modeling paper?*
 
-x = fraction of individuals (humans) in the population willing to participate in coral conservation
-C = live coral cover 
-P = Parrotfish abundance (try different values)
-
-*Undefined Variables (description not in table)*
-
-K = human growth rate per year
-j = coral growth rate per year
-σ = Parrotfish growth rate per year
-φ = unknown interaction term
-
-```{r}
-#parameters
-K = 1.014
-j = 1.68
-σ = 0.5
-φ = 0.2
-
-#equation - change in willingness to participate in coral conservaiton
-change_wtp <- Kx(1−x)(−1 +j(1−C) − σP(1−x) +φ(2x−1))
+Our predictions for the coupled system were accurate in that the model became more dynamic due to increased complexity with additional factors. However, our predictions for the most important variables failed to address the importance of the parrotfish population and overestimated the importance of macroalgae. Interestingly, our results were similar to some of the results from the original modeling paper where macroalgae became dominant and other organisms died out (Figure 3a, 3b, and 3d in Thampi et al. 2018). However, unlike the results from the paper, our model was unable to demonstrate a scenario where the parrotfish and live coral populations were able to persist.
 
 
-```
+*How did your flow diagrams change over the course of the lessons? What did you learn through the process of developing flow diagrams with others?*
 
-Equilibrium points occur when dx/dt = 0. 
+With each new flow diagram, more factors and interactions were added. In addition, the complexity of interactions increased where effects were not striclty positive or negative, but rather became dependent on the situation. While the final flow diagram produced still had some differences from the model, each progression of the diagram likely increased in accuracy (i.e., better representation of actual world). The increased complexity of the diagrams caused by working with others demonstrates how collaboration and working with a diverse group can allow more ideas to be produced resulting in a more thorough and inclusive final product. Also, this process demonstrated the limitations of flow diagrams, even when working with others, for predicting outcomes in complex systems and how models can help produce a better/more accurate understanding of the mechanisms driving such systems.
 
-dx/dt = 0 at 3 points:
 
-1) when x = 0
+*What were the limitations of the coupled socio-ecological model used here? What changes would you make to the model?*
 
-In this case, none of population supports coral reef conservation.
+With our model, it was challenging to determine how changes in parameter values would impact the outcome of the system. By having many variables included, multiple scenarios had to be performed to determine the impacts and significance of each variable. Further modeling would likely me needed to provide support for the findings and provide statistical support through replication. In addition, the value of each simulation produced by the model is uncertain, as the altered parameter values were chosen randomly and may not be realistic for the system. While this model incorporates many variables, it seems there are still other variables not included that may influence the coral reef survival in the future, that I would have incorporated in the model. For example, I would include ecological variables like water temperature and hurricane frequency and severity. Due to climate change, these factors are all changing in ways that are unfavorable for coral survival and therefore will likely influence future coral abundance.
 
-2) when (1-x) = 0 aka x = 1
 
-In this case, all of population supports coral reef conservation.
+*What aspects of this assignment were most or least useful? How would you improve this assignment?*
 
-3) When (−1 +j(1−C) − σP(1−x) +φ(2x−1)) = 0
+I found the flow diagrams and model evaluation for this assignment to be the most useful. I am a visual learner so making the flow diagrams helped my explain my thoughts and understand the thoughts of others. Similarly, comparing the model outputs visually was a useful way to see how individual parameters could alter the outcome for all other parameters. I also appreciated the staged complexity of the assignment, where we first thought of the system on our own with a guided background (social or ecological), and then worked with different people to have a more comprehensive/thorough understanding of the system.
 
--1 + j - jC - σP + σPx + 2φx - φ = 0
-
-j - jC - σP + σPx + 2φx = 1
-
-Not sure what this means...
-
+In the future, it would be nice to have a model that produced more variable results based on changes in the parameter values (all of our outcomes resulted in dominance of macroalgae with other organisms dying out, although this may be due to errors in my code). Also, having more defined guidance on parameter values would be useful (what is an appropriate scale to chose from when selecting parameter values).
